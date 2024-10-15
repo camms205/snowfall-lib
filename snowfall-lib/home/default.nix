@@ -268,13 +268,14 @@ in {
         host ? "",
         virtual ? (snowfall-lib.system.is-virtual target),
         systems ? {},
+        namespace ? snowfall-config.namespace,
         ...
       }: {
         _file = "virtual:snowfallorg/home/extra-special-args";
 
         config = {
           home-manager.extraSpecialArgs = {
-            inherit system target format virtual systems host;
+            inherit system target format virtual systems host namespace;
 
             lib = home-lib;
 
@@ -346,10 +347,7 @@ in {
 
                   # NOTE: specialArgs are not propagated by Home-Manager without this.
                   # However, not all specialArgs values can be set when using `_module.args`.
-                  _module.args = builtins.removeAttrs ((users.users.${name}.specialArgs or {})
-                    // {
-                      namespace = snowfall-config.namespace;
-                    })
+                  _module.args = builtins.removeAttrs ((users.users.${name}.specialArgs or {}))
                   ["options" "config" "lib" "pkgs" "specialArgs" "host"];
                 };
 
